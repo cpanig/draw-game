@@ -1,0 +1,34 @@
+.com-container {
+  width: 50%;
+  padding: 1%;
+}
+
+.comment-list {
+  height: 150px;
+  overflow-y: scroll;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  /* border: 1px solid red; */
+}
+
+.comment-items {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.user-name {
+  font-weight: bold;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.user-value {
+  margin: 0;
+}
+
+.comment-input {
+  /* height: 20%; */
+  width: 80%;
+}

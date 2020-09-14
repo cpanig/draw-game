@@ -1,0 +1,18 @@
+
+.rank-container{
+    height: 100%;
+}
+
+
+.user-container{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    /* position: absolute; */
+    transition: all 1s ease-in-out;
+}
+
+.userScore{
+    font-weight: bold;
+    font-size: 25px;
+}
