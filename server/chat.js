@@ -5,9 +5,9 @@ const eventCode = {
     99 : register, //注册
     100 : joinInGame, //已经注册，加入游戏
     300 : setAnswer, //检测答案
-    350 : setOrigin, //
-    400 : setCanvas, //广播作画轨迹
-    450 : setTools //切换工具
+    350 : setOrigin, //松开鼠标、或鼠标移除绘画区域时，重置原点（实现）
+    400 : setCanvas, //广播作画轨迹（实现）
+    450 : setTools //切换工具（实现）
 }
 // 待解决的问题
 // 1.怎么样去监听不同的事件

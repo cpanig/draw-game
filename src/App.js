@@ -13,12 +13,11 @@ ws.onopen = function () {
   ws.send(JSON.stringify({ code: 0, data: "are you ok ?" }));
 };
 
-export const websocket = React.createContext();
-export const statusContext = React.createContext();
 
 function App() {
   // 玩家列表
   const [userList, setUserList] = useState([]);
+  // 评论列表
   const [commentList, setCommentList] = useState([]);
 
   // 广播玩家列表
@@ -28,7 +27,6 @@ function App() {
 
   // 广播评论
   const addComment = (newAnswer) => {
-    console.log(newAnswer)
     setCommentList([...commentList, newAnswer]);
   };
 
@@ -55,23 +53,12 @@ function App() {
         console.log(error);
       }
     };
-    getUser();
+    // getUser();
   }, []);
 
-  // 加入游戏
-  const joinInGame = async () => {
-    // 如果本地有ID，则将本地ID发给后台
-    // 如果本地没有ID，则由后台创建一个ID，并加入游戏
-    // const user = localStorage.getItem("user");
-    // if (!user) {
-    //   ws.send(JSON.stringify({ code: 99 }));
-    // }
-  };
 
   return (
     <div className="App">
-      <statusContext.Provider>
-        <websocket.Provider value={ws}>
           <Switch>
             <Route
               path="/"
@@ -90,8 +77,6 @@ function App() {
             />
             <Redirect to="/not-found" render={() => <h1>没有页面</h1>} />
           </Switch>
-        </websocket.Provider>
-      </statusContext.Provider>
     </div>
   );
 }

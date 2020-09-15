@@ -11,6 +11,15 @@
   border-radius: 10px;
 }
 
+
+.ready-room-container{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  overflow: hidden;
+}
+
+/* 准备房间 */
 .ready-container {
   width: 45%;
   display: flex;
@@ -19,6 +28,7 @@
   margin: 0 auto;
 }
 
+/* 在线列表 */
 .online-items {
   width: 120px;
   height: 120px;

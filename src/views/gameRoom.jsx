@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React from "react";
 import { Row, Col } from "antd";
 
 import Canvas from "../components/canvas/canvas";
@@ -14,6 +14,8 @@ const user = JSON.parse(sessionStorage.getItem('user')) ?? -1;
 // 当前画画的人的ID,暂时写死
 const current = 3;
 
+const isDrawer = user.userId === current;
+
 const Gameroom = (props) => {
   return (
     <>
@@ -23,7 +25,7 @@ const Gameroom = (props) => {
         </Col>
 
         <Col xs={{ span: 15 }}>
-          <Canvas  />
+          <Canvas isDrawer={isDrawer}  />
           <Comments {...props} userId={user.userId} name={user.name} />
         </Col>
       </Row>
