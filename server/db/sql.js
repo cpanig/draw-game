@@ -1,12 +1,12 @@
 var mysql = require("mysql");
 var connection = mysql.createConnection({
-  host: "localhost",
+  host: "192.168.0.123",
   user: "root",
   password: "123456",
   database: "game",
 });
 
-// connection.connect();
+connection.connect();
 
 // plyaer 存放游戏中的玩家
 // question 存放所有的问题

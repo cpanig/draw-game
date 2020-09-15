@@ -6,9 +6,9 @@ import { websocket } from "../../App";
 
 
 
-const Comments = ({ userId, name }) => {
+const Comments = ({ userId, name,commentList,setCommentList }) => {
   const ws = useContext(websocket);
-  const [commentList, setCommentList] = useState([]);
+  // const [commentList, setCommentList] = useState([]);
   const [message, setMessage] = useState("");
 
   const handleEnter = (e) => {
@@ -23,9 +23,9 @@ const Comments = ({ userId, name }) => {
       name,
       value: message,
     };
-    setCommentList([...commentList, answer]);
+    // setCommentList([...commentList, answer]);
 
-    ws.send(JSON.stringify({ code : 300 , answer }));
+    ws.send(JSON.stringify({ code : 300 , data: answer }));
     setMessage("");
   };
 

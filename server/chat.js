@@ -4,7 +4,10 @@ const eventCode = {
     0 : (info) =>{ console.log(info)}, //测试
     99 : register, //注册
     100 : joinInGame, //已经注册，加入游戏
-    300 : setAnswer //检测答案
+    300 : setAnswer, //检测答案
+    350 : setOrigin, //
+    400 : setCanvas, //广播作画轨迹
+    450 : setTools //切换工具
 }
 // 待解决的问题
 // 1.怎么样去监听不同的事件
@@ -26,11 +29,11 @@ const server = ws.createServer(function (connection) {
 
     connection.on('text', function (data) {
         // 获取事件代码
-        const { code } = JSON.parse(data);
+        const { code,data : res } = JSON.parse(data);
         // 根据代码获取处理函数
         const eventHandle = eventCode[code];
         // 执行处理函数
-        eventHandle(JSON.parse(data));
+        eventHandle(res);
     })
 
     // 断开连接
@@ -84,12 +87,27 @@ function setDrawer(){
 // 如果是正确答案，那么根据答对的排位进行加分
 // 最后返回整个数组
 function setAnswer(answer){
-    console.log(answer)
-
+    
+   broadcast(JSON.stringify({code:300,data:answer}))
 }
 
 
+// 鼠标点击时，确定笔触的原点坐标
+function setOrigin(){
+    broadcast(JSON.stringify({code : 350 }))
+}
 
+
+// 鼠标移动时，从点击的这个原坐标开始移动
+// 鼠标松开后，取消跟踪鼠标
+function setCanvas(position){
+    broadcast(JSON.stringify({code : 400 , data:position}))
+}
+
+// 广播切换工具
+function setTools(tools){
+    broadcast(JSON.stringify({code : 450 , data:tools}))
+}
 
 
 
