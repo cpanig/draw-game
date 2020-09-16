@@ -8,7 +8,6 @@ const Rank = ({ userId, current,userList }) => {
   return (
     <div className={`${"rank-container"} ${"global-border"}`}>
       {userList && userList.map((user, index) => {
-        
         const isMine = userId === user.id;
         const isDrawer = current === user.id;
         return <UserCard key={user.id} index={index} user={user} isMine={isMine} isDrawer={isDrawer} />;

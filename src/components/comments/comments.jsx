@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import React, { useState,useContext } from "react";
 import { Button } from "antd";
 import "./comments.css";
-// import { websocket } from "../../App";
+import { websocketStatus } from "../../App";
 
 
 
 
 const Comments = ({ userId, name,commentList,setCommentList }) => {
-  // const ws = useContext(websocket);
+  const ws = useContext(websocketStatus);
   const [message, setMessage] = useState("");
 
   const handleEnter = (e) => {
@@ -24,7 +24,7 @@ const Comments = ({ userId, name,commentList,setCommentList }) => {
     };
 
 
-    // ws.send(JSON.stringify({ code : 300 , data: answer }));
+    ws.send(JSON.stringify({ code : 300 , data: answer }));
     setMessage("");
   };
 

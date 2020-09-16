@@ -5,3 +5,9 @@ export function getUserList(){
         url:"/getUserList"
     })
 }
+
+export function getAvatarList(){
+    return get({
+        url:"/getAvatarList"
+    })
+}

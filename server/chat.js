@@ -2,7 +2,7 @@ const ws = require('nodejs-websocket')
 const { insert } = require('./db/sql')
 const eventCode = {
     0 : (info) =>{ console.log(info)}, //测试
-    99 : register, //注册
+    99 : register, //注册(实现)
     100 : joinInGame, //已经注册，加入游戏
     300 : setAnswer, //检测答案
     350 : setOrigin, //松开鼠标、或鼠标移除绘画区域时，重置原点（实现）
@@ -51,15 +51,12 @@ const server = ws.createServer(function (connection) {
 
 
 // 注册
-async function register(info){
+async function register(newUser){
     const sql = `INSERT INTO player SET ?`
-    const value = {
-        name:"小红",
-        score : 0
-    }
+    const value = newUser;
     const { insertId : id } = await insert(sql,value);
     
-    broadcast(JSON.stringify({code:99,data:{id,...value}}))
+    broadcast(JSON.stringify({code:99,data:{id,...newUser}}))
 }
 
 // 加入游戏

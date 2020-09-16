@@ -9,7 +9,7 @@ export function getUserList(data){
 }
 
 
-export function joinInGame(data){
+export function register(data){
     return post({
         url:"/joinInGame",
         data

@@ -1,12 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState,useContext } from "react";
 import "./canvas.css";
+import { websocketStatus } from "../../App";
 // import Tips from "../tips/tips";
 import Tool from "./tool/tool";
 
 const toolMap = new Map();
-const ws = new WebSocket("ws://192.168.0.123:8081");
 
 const Canvas = ({ isDrawer }) => {
+  const ws = useContext(websocketStatus);
   const canvas = useRef();
   const [ctx, setCtx] = useState(null);
   const [current, setCurrent] = useState(1); //当前工具
@@ -66,21 +67,22 @@ const Canvas = ({ isDrawer }) => {
 
   useEffect(() => {
     const context = canvas.current.getContext("2d");
-    // canvas.current.onmousedown = (e) => handleMouseDown(e);
-    // canvas.current.onmousemove = (e) => handleMouseMove(e);
-    // canvas.current.onmouseup = (e) => handleMouseUp(e);
-    // canvas.current.onmouseleave = (e) => handleMouseLeave(e);
+    canvas.current.onmousedown = (e) => handleMouseDown(e);
+    canvas.current.onmousemove = (e) => handleMouseMove(e);
+    canvas.current.onmouseup = (e) => handleMouseUp(e);
+    canvas.current.onmouseleave = (e) => handleMouseLeave(e);
     context.lineWidth = 1;
     context.lineCap = "round";
     context.lineJoin = "round";
     setCtx(context);
-  }, []);
+  });
 
   // 按下鼠标
   // 只有画的人可以触发事件，其他人只能看
   const handleMouseDown = (e) => {
+    e.preventDefault();
     if (!isDrawer) return;
-    // ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingEnabled = true;
     setIsPress(true);
   };
 
@@ -120,6 +122,7 @@ const Canvas = ({ isDrawer }) => {
       posX = e.offsetX + e.target.offsetLeft;
       posY = e.offsetY + e.target.offsetTop;
     }
+
     //返回位置对象
     return {
       posX: posX,
@@ -131,15 +134,7 @@ const Canvas = ({ isDrawer }) => {
     <div className={`${"canvas-container"} ${"global-border"}`}>
       {/* <Tips /> */}
       <Tool currentTool={current} setCurrent={switchTools} />
-      <canvas
-        ref={canvas}
-        width="750"
-        height="500"
-        onMouseDown={handleMouseDown}
-        onMouseUp={handleMouseUp}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
-      />
+      <canvas ref={canvas} width="750" height="500" />
     </div>
   );
 };
