@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Card, Button } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
+import { websocketStatus } from "../App";
 import AddUser from "../components/addUser/addUser";
 
 // 座位
@@ -27,11 +28,10 @@ const OnlineItem = ({ item, addUser }) => {
 };
 
 const ReadyRoom = ({ userList }) => {
+  const ws = useContext(websocketStatus);
   const [current, setCurrent] = useState(-1); //当前选择的座位
-  const [onLineList, setOnlineList] = useState([]); //
+  const [onLineList, setOnlineList] = useState([]); //已在坐席中的数组
   const [showForm, setShowForm] = useState(false);
-  const isLeader = false; //是否是房主 ？ 开始游戏 ：准备
-  const isAllReady = true; //房主，是否全部准备
 
   useEffect(() => {
     let list = [];
@@ -45,10 +45,18 @@ const ReadyRoom = ({ userList }) => {
 
   const addUser = (index) => {
     // 两种情况：
-    // 1 .未加入，则加入到指定位置
-    // 2.已加入，换位置，则更改locate
-    setCurrent(index);
-    setShowForm(true);
+    // 1.未注册，则先注册，再广播到指定位置
+    // 2.已注册，换位置，则直接广播
+    // 3.第二次进行游戏时，缓存的id还在，则直接加入到指定位置，不需要注册
+    const user = sessionStorage.getItem("user");
+    if (!user) {
+      setCurrent(index);
+      setShowForm(true);
+    } else {
+      ws.send(JSON.stringify({ code: 99, data: user }));
+      // const isTrans = onLineList.some(e => e.id === user.id);
+      // 打完一把，然后user还在，locate也还在，但是如果刷新后，onLineList就重置了
+    }
   };
 
   return (
@@ -56,13 +64,7 @@ const ReadyRoom = ({ userList }) => {
       {/* 座位 */}
       <div className="ready-container">
         {onLineList &&
-          onLineList.map((item, index) => (
-            <OnlineItem
-              key={index}
-              addUser={() => addUser(index)}
-              item={item}
-            />
-          ))}
+          onLineList.map((item, index) => <OnlineItem key={index} addUser={() => addUser(index)} item={item} />)}
       </div>
       {/* 按钮 
         * 先不写准备，只有房主有开始按钮，即current === userList[0].id
