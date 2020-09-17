@@ -4,9 +4,7 @@ import "./comments.css";
 import { websocketStatus } from "../../App";
 
 
-
-
-const Comments = ({ userId, name,commentList,setCommentList }) => {
+const Comments = ({ userId, name,commentList }) => {
   const ws = useContext(websocketStatus);
   const [message, setMessage] = useState("");
 
@@ -22,7 +20,6 @@ const Comments = ({ userId, name,commentList,setCommentList }) => {
       name,
       value: message,
     };
-
 
     ws.send(JSON.stringify({ code : 300 , data: answer }));
     setMessage("");

@@ -55,6 +55,7 @@ function App() {
 
   //监听服务器信息
   ws.onmessage = function (event) {
+    console.log(JSON.parse(event.data));
     const { code, data } = JSON.parse(event.data);
     const boardHandle = boardCastMap[code];
     boardHandle && boardHandle(data);
@@ -74,7 +75,6 @@ function App() {
             render={(props) => (
               <GameRoom
                 commentList={commentList}
-                setCommentList={setCommentList}
                 userList={userList}
               />
             )}

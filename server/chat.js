@@ -84,7 +84,7 @@ function setDrawer(){
 // 如果是正确答案，那么根据答对的排位进行加分
 // 最后返回整个数组
 function setAnswer(answer){
-    
+    console.log(answer)
    broadcast(JSON.stringify({code:300,data:answer}))
 }
 

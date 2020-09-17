@@ -26,7 +26,7 @@ const UserCard = ({ user, isDrawer, isMine, index }) => {
       >
         <Meta
           avatar={
-            <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
+            <Avatar src={user.avatar} />
           }
           title={user.name}
           description={score}

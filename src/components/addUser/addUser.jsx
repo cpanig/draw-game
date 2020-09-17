@@ -51,8 +51,8 @@ const AddUser = ({ current, showForm, setShowForm }) => {
     try {
       // const res = await joinInGame(newPlayer);
       // console.log(res);
-      // ws.send(JSON.stringify({ code: 99, data: newPlayer }));
-      // setShowForm(false);
+      ws.send(JSON.stringify({ code: 99, data: newPlayer }));
+      setShowForm(false);
     } catch (error) {
       console.log(error);
     }
@@ -66,7 +66,7 @@ const AddUser = ({ current, showForm, setShowForm }) => {
         okText="确定"
         cancelText="取消"
         visible={showForm}
-        onOk={() => register()}
+        onOk={() => joinInGame()}
         onCancel={() => setShowForm(false)}
       >
         <Form ref={formRef}>

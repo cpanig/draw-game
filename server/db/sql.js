@@ -6,7 +6,7 @@ var connection = mysql.createConnection({
   database: "game",
 });
 
-// connection.connect();
+connection.connect();
 
 // question 存放所有的问题
 // id answer tips
