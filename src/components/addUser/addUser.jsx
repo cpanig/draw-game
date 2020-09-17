@@ -39,7 +39,7 @@ const AddUser = ({ current, showForm, setShowForm }) => {
 
   // 获取用户输入的名称
   //应该先通过接口提交个人信息，再进行广播
-  const joinInGame =async () => {
+  const joinInGame = async () => {
     const { username } = formRef.current.getFieldValue();
     if(!username || !avatar ) return;
     const newPlayer = {
@@ -49,7 +49,9 @@ const AddUser = ({ current, showForm, setShowForm }) => {
       score: 0,
     };
     try {
-      // const res = await joinInGame(newPlayer);
+      // 先把新的用户信息post到服务器上,服务器返回一个ID，这个ID就是身份标识
+      const user = await joinInGame(newPlayer);
+      sessionStorage.setItem('user',user);
       // console.log(res);
       ws.send(JSON.stringify({ code: 99, data: newPlayer }));
       setShowForm(false);

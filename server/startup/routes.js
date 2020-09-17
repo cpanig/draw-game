@@ -9,7 +9,7 @@ const getAvatarList = require('../routes/getAvatarList')
 router.get('/api/getUserList',getUserList);
 
 // 加入游戏
-router.post('/api/joinInGame',joinInGame)
+router.post('/api/joinInGame',require("body-parser").json(),joinInGame)
 
 // 读取单张图片
 router.get('/assets/:img',readImg);
