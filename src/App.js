@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useRef } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import "antd/dist/antd.css";
 import "./App.css";
@@ -16,12 +16,13 @@ ws.onopen = function () {
 export const websocketStatus = React.createContext();
 
 function App() {
+  const user = useRef(sessionStorage.getItem('user') ?? { id : 1});
   // 玩家列表
   // 第一个进入这个数组里的为房主
   // 在开始游戏之后，先进行一次降序排列，得出正确的排位信息
   const [userList, setUserList] = useState([]);
   // 评论列表
-  const [commentList, setCommentList] = useState([]);
+  const [commentList, setCommentList] = useState([{id:1,name:"小明",value:"???"}]);
 
   // 进入该页面后，先获取一个在线玩家列表
   useEffect(() => {
@@ -38,8 +39,18 @@ function App() {
 
   // 广播玩家列表
   // 根据locate确定座位
+  // 根据数据库返回的ID决定谁是房主（或者在数组的位置，索引0为房主）
   const addUser = (newUser) => {
-    setUserList([...userList, newUser]);
+    const isBlock = userList.some(e => e.locate === newUser.locate); //所选座位是否已经被占
+    const playerIndex = userList.findIndex(e => e.id === userList.id) ?? -1;
+    if(!isBlock) return;
+    if(playerIndex !== -1){
+      userList.splice(playerIndex,1,newUser); //不要改变数组原来的位置
+      setUserList(userList);
+    }
+    else{
+      setUserList([...userList, newUser]);
+    }
   };
 
   // 广播评论
@@ -55,7 +66,6 @@ function App() {
 
   //监听服务器信息
   ws.onmessage = function (event) {
-    console.log(JSON.parse(event.data));
     const { code, data } = JSON.parse(event.data);
     const boardHandle = boardCastMap[code];
     boardHandle && boardHandle(data);
@@ -68,12 +78,13 @@ function App() {
           <Route
             path="/"
             exact
-            render={(props) => <ReadyRoom userList={userList} />}
+            render={(props) => <ReadyRoom user={user} userList={userList} />}
           />
           <Route
             path="/game"
             render={(props) => (
               <GameRoom
+                user={user}
                 commentList={commentList}
                 userList={userList}
               />

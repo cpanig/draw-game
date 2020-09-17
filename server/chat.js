@@ -5,8 +5,6 @@ const eventCode = {
     console.log(info);
   }, //测试
   99: register, //注册(实现)
-  101: setTrans, //换位
-  100: joinInGame, //已经注册，加入游戏
   250: startGame, //开始游戏
   300: setAnswer, //检测答案
   350: setOrigin, //松开鼠标、或鼠标移除绘画区域时，重置原点（实现）
@@ -59,13 +57,7 @@ function register(newPlayer) {
   broadcast({ code: 99, data: newPlayer });
 }
 
-function setTrans(player){
-  broadcast({ code: 101, data: player });
-}
 
-
-// 加入游戏
-function joinInGame(info) {}
 
 function startGame() {}
 

@@ -31,7 +31,8 @@ const Tool = ({ setCurrent, currentTool }) => {
         position: "absolute",
         height: "100%",
         width: "80px",
-        border: "1px solid red",
+        background:"rgba(0,0,0,0.1)",
+        borderRadius:"10px"
       }}
     >
       {toolsList.map((tool) => {

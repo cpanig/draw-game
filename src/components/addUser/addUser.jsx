@@ -50,9 +50,8 @@ const AddUser = ({ current, showForm, setShowForm }) => {
     };
     try {
       // 先把新的用户信息post到服务器上,服务器返回一个ID，这个ID就是身份标识
-      const user = await joinInGame(newPlayer);
+      const user = await register(newPlayer);
       sessionStorage.setItem('user',user);
-      // console.log(res);
       ws.send(JSON.stringify({ code: 99, data: newPlayer }));
       setShowForm(false);
     } catch (error) {

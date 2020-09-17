@@ -1,5 +1,7 @@
 .canvas-container {
-    height: 500px;
+    height: 100%;
     margin-bottom: 2%;
     position: relative;
+    border: 3px solid orange;
+    border-radius: 10px;
 }

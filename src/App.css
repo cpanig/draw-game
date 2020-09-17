@@ -1,13 +1,14 @@
 .App {
-  width: 1200px;
-  height: 100%;
+  width: 1400px;
+  /* height: 100%; */
   /* text-align: center; */
   margin: 2% auto 3% auto;
 }
 
 /* 边框 */
 .global-border {
-  border: 1px solid blue;
+  /* border: 1px solid blue; */
+  background-color: #eeeeee;
   border-radius: 10px;
 }
 
