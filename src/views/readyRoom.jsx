@@ -48,6 +48,7 @@ const ReadyRoom = ({ userList }) => {
     // 1.未注册，则先注册，再广播到指定位置
     // 2.已注册，换位置，则直接广播
     // 3.第二次进行游戏时，缓存的id还在，则直接加入到指定位置，不需要注册
+    // 4.我设计了一个退出座位按钮，这时已注册，但是locate为-1
     const user = sessionStorage.getItem("user");
     if (!user) {
       setCurrent(index);
@@ -70,13 +71,7 @@ const ReadyRoom = ({ userList }) => {
         * 先不写准备，只有房主有开始按钮，即current === userList[0].id
       
       */}
-      {isLeader ? (
-        <Button type="primary" disabled={isAllReady}>
-          开始游戏
-        </Button>
-      ) : (
-        <Button type="primary">准备</Button>
-      )}
+      <Button type="primary">开始游戏</Button>
 
       {/* 对话框 */}
       <AddUser
