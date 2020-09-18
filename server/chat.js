@@ -5,23 +5,13 @@ const eventCode = {
     console.log(info);
   }, //测试
   99: register, //注册(实现)
-  101: setTrans, //换位
-  100: joinInGame, //已经注册，加入游戏
+  101: setTrans, //换位(实现)
   250: startGame, //开始游戏
   300: setAnswer, //检测答案
   350: setOrigin, //松开鼠标、或鼠标移除绘画区域时，重置原点（实现）
   400: setCanvas, //广播作画轨迹（实现）
   450: setTools, //切换工具（实现）
 };
-// 待解决的问题
-// 1.怎么样去监听不同的事件
-// 2.怎么传输canvas
-
-// 需要广播的数据
-// 1.canvas
-// 2.回答问题的数据
-// 3.分数和排名
-// 4.轮到哪一个人作画
 
 const server = ws.createServer(function (connection) {
   connection.on("connect", function (code) {
@@ -59,15 +49,21 @@ function register(newPlayer) {
   broadcast({ code: 99, data: newPlayer });
 }
 
-function setTrans(player){
-  broadcast({ code: 101, data: player });
+//  换位
+async function setTrans(player) {
+  const sql = "UPDATE player SET locate = ? WHERE Id = ?";
+  const value = [player.locate, player.id];
+  try {
+    const result = await insert(sql, value);
+    broadcast({ code: 99, data: player });
+  } catch (error) {
+    console.log(error);
+  }
 }
 
-
-// 加入游戏
-function joinInGame(info) {}
-
-function startGame() {}
+function startGame() {
+  broadcast({ code: 250 });
+}
 
 // 开始游戏后，将所有参赛玩家保存到数据库中，并广播整个玩家列表数据
 // 每个玩家进入游戏时（之后会设置为在开始游戏后），将玩家数据保存到数据库中

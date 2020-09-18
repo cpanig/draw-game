@@ -3,7 +3,7 @@ import { Form, Input, Button, Modal, Popover, Image } from "antd";
 import { websocketStatus } from "../../App";
 import { getAvatarList } from "../../network/get";
 import { register } from "../../network/post";
-const AddUser = ({ current, showForm, setShowForm }) => {
+const AddUser = ({ user,current, showForm, setShowForm }) => {
   const ws = useContext(websocketStatus);
   const formRef = useRef();
   const [avatar, setAvatar] = useState("");
@@ -52,9 +52,9 @@ const AddUser = ({ current, showForm, setShowForm }) => {
     };
     try {
       // 先把新的用户信息post到服务器上,服务器返回一个ID，这个ID就是身份标识
-      const newPlayer = await register(registerData);
-      sessionStorage.setItem('user',JSON.stringify(newPlayer));
-      ws.send(JSON.stringify({ code: 99, data: newPlayer }));
+      user = await register(registerData);
+      sessionStorage.setItem('user',JSON.stringify(user));
+      ws.send(JSON.stringify({ code: 99, data: user }));
       setShowForm(false);
     } catch (error) {
       console.log(error);

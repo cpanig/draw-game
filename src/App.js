@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import { useHistory  } from "react-router"
 import { Route, Switch, Redirect } from "react-router-dom";
 import "antd/dist/antd.css";
 import "./App.css";
@@ -15,7 +16,22 @@ ws.onopen = function () {
 
 export const websocketStatus = React.createContext();
 
+// const ProtectRouter = ({ component, path, user,...props }) => {
+//   const TargetRoute = user ? (
+//     <Route
+//       path={path}
+//       render={(props) => <component user={user} {...props} />}
+//     />
+//   ) : (
+//     <Redirect to="/" />
+//   );
+
+//   return <TargetRoute />;
+// };
+
 function App() {
+  const history = useHistory();
+  const user = JSON.parse(sessionStorage.getItem("user"));
   // 玩家列表
   // 第一个进入这个数组里的为房主
   // 在开始游戏之后，先进行一次降序排列，得出正确的排位信息
@@ -39,17 +55,18 @@ function App() {
   }, []);
 
   // 广播玩家列表
-  // 根据locate确定座位,如果位置已被占，会停止插入
+  // 根据locate确定座位
+  // 根据数据库返回的ID决定谁是房主（或者在数组的位置，索引0为房主）
   const addUser = (newUser) => {
-    const playerIdx = userList.findIndex(e => e.id === newUser.id) ?? -1; //防止重复入席
-    const isBlock = userList.some(e => e.locate === newUser.locate); //防止入席冲突
-    if(isBlock) return;
-    if(playerIdx !== -1){
-      userList.splice(playerIdx,1);
+    const isBlock = userList.some((e) => e.locate === newUser.locate); //所选座位是否已经被占
+    const playerIndex = userList.findIndex((e) => e.id === newUser.id) ?? -1;
+    if (isBlock) return;
+    if (playerIndex !== -1) {
+      userList.splice(playerIndex, 1, newUser); //不要改变数组原来的位置
+      setUserList([...userList]);
+    } else {
+      setUserList([...userList, newUser]);
     }
-    
-    setUserList([...userList, newUser]);
-    
   };
 
   // 广播评论
@@ -57,18 +74,16 @@ function App() {
     setCommentList([...commentList, newAnswer]);
   };
 
-  // 换位或者入席
-  // 如果在座位上，则换位
-  // 如果之前因为座位冲突而没有入席，可以调用此方法再次入席
-  const setTrans = (player) =>{
-    const isInit = userList.some(e => e.locate = player.locate)
+  const startGame = () =>{
+    console.log('run?');
+    history.push('/game');
   }
 
   // 广播事件map
   const boardCastMap = {
     99: addUser,
     300: addComment,
-    101: setTrans
+    250: startGame
   };
 
   //监听服务器信息
@@ -83,14 +98,18 @@ function App() {
       <websocketStatus.Provider value={ws}>
         <Switch>
           <Route
-            path="/ready"
+            path="/"
             exact
-            render={(props) => <ReadyRoom userList={userList} />}
+            render={(props) => <ReadyRoom user={user} userList={userList} />}
           />
           <Route
             path="/game"
             render={(props) => (
-              <GameRoom commentList={commentList} userList={userList} />
+              <GameRoom
+                user={user}
+                commentList={commentList}
+                userList={userList}
+              />
             )}
           />
 

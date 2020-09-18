@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState,useContext } from "react";
 import "./canvas.css";
 import { websocketStatus } from "../../App";
-// import Tips from "../tips/tips";
+import Tips from "../tips/tips";
 import Tool from "./tool/tool";
 
 const toolMap = new Map();
@@ -131,8 +131,8 @@ const Canvas = ({ isDrawer }) => {
   };
 
   return (
-    <div className={`${"canvas-container"} ${"global-border"}`}>
-      {/* <Tips /> */}
+    <div className={`${"canvas-container"}`}>
+      <Tips />
       <Tool currentTool={current} setCurrent={switchTools} />
       <canvas ref={canvas} width="750" height="500" />
     </div>

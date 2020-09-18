@@ -1,21 +1,21 @@
-import React from "react";
+import React,{useEffect} from "react";
 import './tips'
 import { message } from 'antd'
 
 
 const Tips = () => {
 
-  // useEffect(() =>{
+  useEffect(() =>{
     message.info({
       content:"小鸡鸡",
       duration : 0,
       style:{
         position:'absolute',
-        left:"58%"
+        left:"44%"
       }
       // icon: 'none'
     })
-  // })
+  },[])
 
   return <></>
 };

@@ -1,30 +1,23 @@
 import React, { useState, useContext } from "react";
-import { Button } from "antd";
+import { Input } from "antd";
 import "./comments.css";
 import { websocketStatus } from "../../App";
+
+const { Search } = Input;
 
 const Comments = ({ userId, name, commentList }) => {
   const ws = useContext(websocketStatus);
   const [message, setMessage] = useState("");
 
-  const handleEnter = (e) => {
-    if (e.keyCode !== 13) return;
-    handleSend();
-  };
-
-  const handleSend =  () => {
-    try {
-      if (message === "") return;
-      const answer = {
-        userId,
-        name: name ?? "匿名",
-        value: message,
-      };
-      ws.send(JSON.stringify({ code: 300, data: answer }));
-      setMessage("");
-    } catch (error) {
-      console.log(error);
-    }
+  const handleSend = (message) => {
+    if (message === "") return;
+    const answer = {
+      userId,
+      name,
+      value: message,
+    };
+    ws.send(JSON.stringify({ code: 300, data: answer }));
+    setMessage("");
   };
 
 
@@ -44,16 +37,15 @@ const Comments = ({ userId, name, commentList }) => {
           })}
       </div>
       {/* 发送评论区 */}
-      <input
-        onKeyDown={(e) => handleEnter(e)}
-        className="comment-input"
-        type="text"
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-      />
-      <Button onClick={handleSend} type="primary">
-        Send
-      </Button>
+      <div>
+        <Search
+          enterButton="send"
+          value={message}
+          size="large"
+          onChange={(e) => setMessage(e.target.value)}
+          onSearch={(value) => handleSend(value)}
+        />
+      </div>
     </div>
   );
 };
