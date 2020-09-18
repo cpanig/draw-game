@@ -48,11 +48,12 @@ const ReadyRoom = ({ userList }) => {
     // 1.未注册，则先注册，再广播到指定位置
     // 2.已注册，换位置，则直接广播
     // 3.第二次进行游戏时，缓存的id还在，则直接加入到指定位置，不需要注册
-    const user = sessionStorage.getItem("user");
+    const user = JSON.parse(sessionStorage.getItem("user"))
     if (!user) {
       setCurrent(index);
       setShowForm(true);
     } else {
+      user.locate = index + 1 ;
       ws.send(JSON.stringify({ code: 99, data: user }));
       // const isTrans = onLineList.some(e => e.id === user.id);
       // 打完一把，然后user还在，locate也还在，但是如果刷新后，onLineList就重置了
@@ -64,19 +65,19 @@ const ReadyRoom = ({ userList }) => {
       {/* 座位 */}
       <div className="ready-container">
         {onLineList &&
-          onLineList.map((item, index) => <OnlineItem key={index} addUser={() => addUser(index)} item={item} />)}
+          onLineList.map((item, index) => (
+            <OnlineItem
+              key={index}
+              addUser={() => addUser(index)}
+              item={item}
+            />
+          ))}
       </div>
       {/* 按钮 
         * 先不写准备，只有房主有开始按钮，即current === userList[0].id
       
       */}
-      {isLeader ? (
-        <Button type="primary" disabled={isAllReady}>
-          开始游戏
-        </Button>
-      ) : (
-        <Button type="primary">准备</Button>
-      )}
+      <Button type="primary">开始游戏</Button>
 
       {/* 对话框 */}
       <AddUser

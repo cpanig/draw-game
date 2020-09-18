@@ -19,6 +19,8 @@ const AddUser = ({ current, showForm, setShowForm }) => {
 
   const selectAvatar = (avatar) => setAvatar(avatar);
 
+
+
   //头像展示区
   const avatarList = () => (
     <div className="">
@@ -42,7 +44,7 @@ const AddUser = ({ current, showForm, setShowForm }) => {
   const joinInGame = async () => {
     const { username } = formRef.current.getFieldValue();
     if(!username || !avatar ) return;
-    const newPlayer = {
+    const registerData = {
       locate: current + 1, //当前所选的位置
       name: username,
       avatar,
@@ -50,9 +52,8 @@ const AddUser = ({ current, showForm, setShowForm }) => {
     };
     try {
       // 先把新的用户信息post到服务器上,服务器返回一个ID，这个ID就是身份标识
-      const user = await joinInGame(newPlayer);
-      sessionStorage.setItem('user',user);
-      // console.log(res);
+      const newPlayer = await register(registerData);
+      sessionStorage.setItem('user',JSON.stringify(newPlayer));
       ws.send(JSON.stringify({ code: 99, data: newPlayer }));
       setShowForm(false);
     } catch (error) {

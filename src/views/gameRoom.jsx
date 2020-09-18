@@ -6,15 +6,14 @@ import Comments from "../components/comments/comments";
 import Rank from "../components/rank/rank";
 
 
-
 // 自己的ID
 // 这个ID会在游戏开始时发放给每个用户，用来标识自己在排行榜里的位置
-const user = JSON.parse(sessionStorage.getItem('user')) ?? { id : 2};
+const user = sessionStorage.getItem('user') ?? { id : 2 };
 
 
 
 const Gameroom = (props) => {
-  const [current,setCurrent] = useState(0);   // 当前画画的人的ID
+  const [current,setCurrent] = useState(2);   // 当前画画的人的ID
   const isDrawer = user.id === current;
   return (
     <>

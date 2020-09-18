@@ -59,7 +59,7 @@ const Canvas = ({ isDrawer }) => {
   };
 
   //监听服务器信息
-  ws.onmessage = function (event) {
+  ws.onmessage = function (event) {                                              
     const { code, data } = JSON.parse(event.data);
     const boardHandle = boardCastMap[code];
     boardHandle && boardHandle(data);

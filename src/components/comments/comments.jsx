@@ -1,10 +1,9 @@
-import React, { useState,useContext } from "react";
+import React, { useState, useContext } from "react";
 import { Button } from "antd";
 import "./comments.css";
 import { websocketStatus } from "../../App";
 
-
-const Comments = ({ userId, name,commentList }) => {
+const Comments = ({ userId, name, commentList }) => {
   const ws = useContext(websocketStatus);
   const [message, setMessage] = useState("");
 
@@ -13,17 +12,22 @@ const Comments = ({ userId, name,commentList }) => {
     handleSend();
   };
 
-  const handleSend = () => {
-    if (message === "") return;
-    const answer = {
-      userId,
-      name,
-      value: message,
-    };
-
-    ws.send(JSON.stringify({ code : 300 , data: answer }));
-    setMessage("");
+  const handleSend =  () => {
+    try {
+      if (message === "") return;
+      const answer = {
+        userId,
+        name: name ?? "匿名",
+        value: message,
+      };
+      ws.send(JSON.stringify({ code: 300, data: answer }));
+      setMessage("");
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+
 
   return (
     <div className={`${"com-container"} ${"global-border"}`}>
