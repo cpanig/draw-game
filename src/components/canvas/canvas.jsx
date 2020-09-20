@@ -1,29 +1,18 @@
 import React, { useEffect, useRef, useState,useContext } from "react";
 import "./canvas.css";
 import { websocketStatus } from "../../App";
-import Tips from "../tips/tips";
 import Tool from "./tool/tool";
 
-const toolMap = new Map();
-
-const Canvas = ({ isDrawer }) => {
+const Canvas = ({ isDrawer,current: currentDrawer }) => {
   const ws = useContext(websocketStatus);
   const canvas = useRef();
   const [ctx, setCtx] = useState(null);
   const [current, setCurrent] = useState(1); //当前工具
   const [isPress, setIsPress] = useState(false);
 
-  // 工具效果
-  toolMap.set(1, () => {
-    ctx.strokeStyle = "#000000";
-    ctx.lineWidth = 1;
-  });
-  toolMap.set(2, () => {});
 
-  ws.onopen = function () {
-    //验证是否达成连接
-    ws.send(JSON.stringify({ code: 0, data: "画板" }));
-  };
+
+
 
   // 重置原点
   const initOrigin = () => {
@@ -32,12 +21,13 @@ const Canvas = ({ isDrawer }) => {
 
   // 画画
   const setDraw = (pos) => {
-    if (current === 2) {
-      ctx.clearRect(pos.x, pos.y, 100, 100);
+
+    switch(current){
+      case 1 : ctx.lineTo(pos.x, pos.y); break;
+      case 2 : return ctx.clearRect(pos.x, pos.y, 100, 100);
+      default: break;
     }
-    if (current === 1) {
-      ctx.lineTo(pos.x, pos.y);
-    }
+
     ctx.stroke();
   };
 
@@ -59,7 +49,8 @@ const Canvas = ({ isDrawer }) => {
   };
 
   //监听服务器信息
-  ws.onmessage = function (event) {                                              
+  ws.onmessage = function (event) {  
+    // console.log(event.data)                                           
     const { code, data } = JSON.parse(event.data);
     const boardHandle = boardCastMap[code];
     boardHandle && boardHandle(data);
@@ -75,7 +66,13 @@ const Canvas = ({ isDrawer }) => {
     context.lineCap = "round";
     context.lineJoin = "round";
     setCtx(context);
-  });
+  } );
+
+
+    // 当current改变时，清空画板
+    // useEffect(() =>{
+    //   ctx.clearRect(0,0,750,500)
+    // },[currentDrawer])
 
   // 按下鼠标
   // 只有画的人可以触发事件，其他人只能看
@@ -132,8 +129,7 @@ const Canvas = ({ isDrawer }) => {
 
   return (
     <div className={`${"canvas-container"}`}>
-      <Tips />
-      <Tool currentTool={current} setCurrent={switchTools} />
+      {isDrawer && <Tool currentTool={current} setCurrent={switchTools} />}
       <canvas ref={canvas} width="750" height="500" />
     </div>
   );

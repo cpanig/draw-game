@@ -1,8 +1,8 @@
 var mysql = require("mysql");
 var connection = mysql.createConnection({
-  host: "192.168.0.123",
+  host: "localhost",
   user: "root",
-  password: "123456",
+  password: "cp171104", //宿舍密码，公司123456
   database: "game",
 });
 
@@ -39,6 +39,7 @@ function exec(sql) {
   });
   return promise;
 }
+
 
 // 数据库插入
 function insert(sql,value) {

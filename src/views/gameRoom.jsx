@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Row, Col } from "antd";
+// import { websocketStatus } from "../App";
 
+import ModelTips from "../components/modelTips/modelTips";
 import Canvas from "../components/canvas/canvas";
 import Comments from "../components/comments/comments";
 import Rank from "../components/rank/rank";
-import ModelTips from "../components/modelTips/modelTips";
 
 // 开始游戏时，需要做的事
 // 1.广播答案（DRAWER）和提示（GUESSER）
@@ -15,26 +16,60 @@ import ModelTips from "../components/modelTips/modelTips";
 // 4.开始收集答案，如果没答对，正常广播；如果答对了，则广播“XXX答对了！，+X（根据顺序）分”，同时广播新分数
 // 5.计时结束，弹窗遮挡整个画面，统计得分，并在读秒完成后，切换到下一轮
 
-const Gameroom = ({user,...props}) => {
-  const [current,setCurrent] = useState(60);   // 当前画画的人的ID,开始游戏后由后台发放
+// 6.一轮结束后（）
+
+const Gameroom = ({ user, userList, ...props }) => {
+  // const ws = useContext(websocketStatus);
+  const [current, setCurrent] = useState(-1); // 当前画画的人的ID,开始游戏后由后台发放
+  const [rankList,setRankList] = useState([]);
   const isDrawer = user.id === current;
 
+  useEffect(() =>{
+    const list = [...userList];
+    setRankList(list.sort((a,b) =>{
+      return a.locate > b.locate ? 1 : -1
+    }))
+  },[userList])
+
+  useEffect(() =>{
+   !!rankList.length &&  setCurrent(rankList[0].id)
+  },[rankList])
+
+  // const boardCastMap = {};
+
+  // //监听服务器信息
+  // ws.onmessage = function (event) {
+  //   const { code, data } = JSON.parse(event.data);
+  //   const boardHandle = boardCastMap[code];
+  //   boardHandle && boardHandle(data);
+  // };
+
   return (
-    <>  
-      <ModelTips />
+    <>
       <Row justify="space-around">
         <Col xs={{ span: 4 }}>
-          <Rank {...props} userId={user.id} current={current} />
+          <Rank {...props} user={user} userList={rankList} current={current} />
         </Col>
 
         <Col xs={{ span: 13 }}>
-          <Canvas isDrawer={isDrawer}  />
+          <Canvas isDrawer={isDrawer} current={current} />
         </Col>
 
         <Col xs={{ span: 6 }}>
-          <Comments {...props} userId={user.id} name={user.name} />
+          <Comments isDrawer={isDrawer} userList={userList} {...props} user={user} />
         </Col>
       </Row>
+
+      {current !== -1 && (
+        <ModelTips
+          user={user}
+          {...props}
+          userList={rankList}
+          current={current}
+          setCurrent={setCurrent}
+          isDrawer={isDrawer}
+        />
+      )}
     </>
   );
 };

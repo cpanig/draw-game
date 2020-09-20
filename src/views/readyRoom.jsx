@@ -11,7 +11,7 @@ const OnlineItem = ({ item, addUser }) => {
       <Card onClick={addUser} hoverable className="online-items">
         {item.id ? (
           <div>
-            <img src={item.avatar} alt="" />
+            <img src={item.avatar ? item.avatar : 'http://localhost:8888/assets/ok.png'  } alt="" />
             <p style={{ textAlign: "center" }}>{item.name}</p>
           </div>
         ) : (
@@ -29,10 +29,10 @@ const OnlineItem = ({ item, addUser }) => {
 
 const ReadyRoom = ({ userList, user }) => {
   const ws = useContext(websocketStatus);
-  const [current, setCurrent] = useState(-1); //当前选择的座位
+  const [current, setCurrent] = useState(user?.locate ?? -1); //当前选择的座位
   const [onLineList, setOnlineList] = useState([]); //已在坐席中的数组
   const [showForm, setShowForm] = useState(false);
-  const isLeader = userList[0]?.id === user?.id || false;
+  const isLeader = userList[0]?.id === (user?.id ?? null) ?? false;
 
   useEffect(() => {
     let list = [];
@@ -49,8 +49,9 @@ const ReadyRoom = ({ userList, user }) => {
     // 1.未注册，则先注册，再广播到指定位置
     // 2.已注册，换位置，则直接广播
     // 3.我设计了一个退出座位按钮，这时已注册，但是locate为-1
-    // const user = sessionStorage.getItem("user");
     if (!user) {
+      const isBlock = userList.find(e => e.locate === index +1);
+      if(isBlock) return;
       setCurrent(index);
       setShowForm(true);
     } else {

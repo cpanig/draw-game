@@ -4,13 +4,26 @@ const eventCode = {
   0: (info) => {
     console.log(info);
   }, //测试
+
+  // 准备房间
   99: register, //注册(实现)
   101: setTrans, //换位(实现)
-  250: startGame, //开始游戏
+  250: startGame, //开始游戏(实现)
+
+
+  // 游戏中
   300: setAnswer, //检测答案
   350: setOrigin, //松开鼠标、或鼠标移除绘画区域时，重置原点（实现）
   400: setCanvas, //广播作画轨迹（实现）
   450: setTools, //切换工具（实现）
+
+
+  // 游戏提示(控场)
+  500: setLastPlayer,  //轮到 XX作画
+  550: setLoadBegin,  //计时开始
+  600: setRoundOver,  //回合结束，setLastPlayer
+  650: setGameOver  //游戏结束， 总清算
+
 };
 
 const server = ws.createServer(function (connection) {
@@ -40,7 +53,7 @@ const server = ws.createServer(function (connection) {
 
   // 连接错误
   connection.on("error", function (error) {
-    console.log(error);
+    // console.log(error);
   });
 });
 
@@ -65,17 +78,6 @@ function startGame() {
   broadcast({ code: 250 });
 }
 
-// 开始游戏后，将所有参赛玩家保存到数据库中，并广播整个玩家列表数据
-// 每个玩家进入游戏时（之后会设置为在开始游戏后），将玩家数据保存到数据库中
-// 届时会让玩家设置自己的名称，选择一个自己的头像
-function setPlayerList(userData) {}
-
-// 设置当前作画者
-function setDrawer() {
-  // 从数据库获取本次游戏的全部玩家
-  // 找到当前作画者
-  // 将作画标签移到下一位
-}
 
 // 检验当前回答是否为正确答案
 // 如果是正确答案，那么根据答对的排位进行加分
@@ -100,6 +102,32 @@ function setCanvas(position) {
 function setTools(tools) {
   broadcast({ code: 450, data: tools });
 }
+
+
+// 轮到XX作画
+function setLastPlayer(lastPlyaer){
+  broadcast({ code: 500,data: lastPlyaer });
+}
+
+
+// 计时开始
+function setLoadBegin(){
+  console.log('计时计时计时计时计时计时计时计时');
+  broadcast({ code: 550 });
+}
+
+
+// 回合结束
+function setRoundOver(){
+  broadcast({ code: 600 });
+}
+
+// 游戏结束
+function setGameOver(){
+  broadcast({ code: 650 });
+}
+
+
 
 // 广播数据
 function broadcast(msg) {

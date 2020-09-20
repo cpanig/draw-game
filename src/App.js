@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory  } from "react-router"
 import { Route, Switch, Redirect } from "react-router-dom";
 import "antd/dist/antd.css";
@@ -16,34 +16,22 @@ ws.onopen = function () {
 
 export const websocketStatus = React.createContext();
 
-// const ProtectRouter = ({ component, path, user,...props }) => {
-//   const TargetRoute = user ? (
-//     <Route
-//       path={path}
-//       render={(props) => <component user={user} {...props} />}
-//     />
-//   ) : (
-//     <Redirect to="/" />
-//   );
 
-//   return <TargetRoute />;
-// };
 
 function App() {
   const history = useHistory();
-  const user = JSON.parse(sessionStorage.getItem("user"));
+  const user = JSON.parse(sessionStorage.getItem("user") ?? null);
+
   // 玩家列表
   // 第一个进入这个数组里的为房主
   // 在开始游戏之后，先进行一次降序排列，得出正确的排位信息
   const [userList, setUserList] = useState([]);
-  // 评论列表
-  const [commentList, setCommentList] = useState([
-    { id: 5, name: "小刚", value: "为什么" },
-  ]);
+
 
   // 进入该页面后，先获取一个在线玩家列表
   useEffect(() => {
     const getUser = async () => {
+      
       try {
         const list = await getUserList();
         setUserList(list);
@@ -60,6 +48,8 @@ function App() {
   const addUser = (newUser) => {
     const isBlock = userList.some((e) => e.locate === newUser.locate); //所选座位是否已经被占
     const playerIndex = userList.findIndex((e) => e.id === newUser.id) ?? -1;
+    console.log(isBlock)
+    console.log(playerIndex)
     if (isBlock) return;
     if (playerIndex !== -1) {
       userList.splice(playerIndex, 1, newUser); //不要改变数组原来的位置
@@ -69,20 +59,15 @@ function App() {
     }
   };
 
-  // 广播评论
-  const addComment = (newAnswer) => {
-    setCommentList([...commentList, newAnswer]);
-  };
 
+  // 开始游戏
   const startGame = () =>{
-    console.log('run?');
     history.push('/game');
   }
 
   // 广播事件map
   const boardCastMap = {
     99: addUser,
-    300: addComment,
     250: startGame
   };
 
@@ -107,8 +92,8 @@ function App() {
             render={(props) => (
               <GameRoom
                 user={user}
-                commentList={commentList}
                 userList={userList}
+                setUserList={setUserList}
               />
             )}
           />

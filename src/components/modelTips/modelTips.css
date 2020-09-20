@@ -1,0 +1,12 @@
+.user-tips{
+    width: 750px;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-57%,-2%);
+    justify-content: center;
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+}

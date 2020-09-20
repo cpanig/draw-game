@@ -4,14 +4,6 @@ import React from "react";
 // 笔
 // 橡皮擦
 
-// const svgTool = () => {
-//     return (
-//         <svg>
-
-//         </svg>
-//     )
-// }
-
 const toolsList = [
   {
     id: 1,
