@@ -1,8 +1,8 @@
 var mysql = require("mysql");
 var connection = mysql.createConnection({
-  host: "localhost",
+  host: "192.168.0.123",
   user: "root",
-  password: "cp171104", //宿舍密码，公司123456
+  password: "123456", //宿舍密码，公司123456
   database: "game",
 });
 

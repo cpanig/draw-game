@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Row, Col } from "antd";
 // import { websocketStatus } from "../App";
 
@@ -21,18 +21,22 @@ import Rank from "../components/rank/rank";
 const Gameroom = ({ user, userList, ...props }) => {
   // const ws = useContext(websocketStatus);
   const [current, setCurrent] = useState(-1); // 当前画画的人的ID,开始游戏后由后台发放
-  const [rankList,setRankList] = useState([]);
   const isDrawer = user.id === current;
+  const rankList = useCallback(
+    () => {
+      const list = [...userList];
+      return list.sort((a,b) => a.locate > b.locate ? 1 : -1)
+    },
+    [userList],
+  )
+
+  // useEffect(() =>{
+  //   const list = [...userList];
+  //   setRankList())
+  // },[userList])
 
   useEffect(() =>{
-    const list = [...userList];
-    setRankList(list.sort((a,b) =>{
-      return a.locate > b.locate ? 1 : -1
-    }))
-  },[userList])
-
-  useEffect(() =>{
-   !!rankList.length &&  setCurrent(rankList[0].id)
+   !!rankList.length && setCurrent(rankList[0].id)
   },[rankList])
 
   // const boardCastMap = {};

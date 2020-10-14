@@ -12,32 +12,13 @@ const AddUser = ({ user,current, showForm, setShowForm }) => {
   // 获取头像列表
   useEffect(() => {
     async function getList() {
-      setList(await getAvatarList());
+      setList(await getAvatarList() ?? []);
     }
     getList();
   }, []);
 
   const selectAvatar = (avatar) => setAvatar(avatar);
 
-
-
-  //头像展示区
-  const avatarList = () => (
-    <div className="">
-      {list &&
-        list
-          .slice(0, 10)
-          .map((avatar, index) => (
-            <Image
-              onClick={() => selectAvatar(avatar.img)}
-              preview={false}
-              key={index}
-              width={40}
-              src={avatar.img}
-            />
-          ))}
-    </div>
-  );
 
   // 获取用户输入的名称
   //应该先通过接口提交个人信息，再进行广播
@@ -60,6 +41,25 @@ const AddUser = ({ user,current, showForm, setShowForm }) => {
       console.log(error);
     }
   };
+
+
+    //头像展示区
+    const avatarList = () => (
+      <div className="">
+        {list &&
+          list
+            .slice(0, 10)
+            .map((avatar, index) => (
+              <Image
+                onClick={() => selectAvatar(avatar.img)}
+                preview={false}
+                key={index}
+                width={40}
+                src={avatar.img}
+              />
+            ))}
+      </div>
+    );
 
   return (
     <>

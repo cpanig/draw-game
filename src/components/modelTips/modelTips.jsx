@@ -17,7 +17,6 @@ const ModelTips = ({ isDrawer, current, setCurrent, user, userList }) => {
 
   // 计时开始，防止重复计时
   const setLoadBegin = () => {
-    console.log(load);
     load === 0 && setLoad(5);
   };
 
